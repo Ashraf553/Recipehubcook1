@@ -1,0 +1,14 @@
+export default {
+  nav: { home: 'Accueil', categories: 'Catégories', favorites: 'Favoris', assistant: 'Assistant' },
+  home: { search_placeholder: 'Rechercher des recettes...', featured: 'Recettes vedettes', popular: 'Populaires', all_recipes: 'Toutes les recettes', no_results: 'Aucun résultat', show_more: 'Voir plus' },
+  categories: { title: 'Catégories', subtitle: 'Choisissez une catégorie' },
+  favorites: { title: 'Favoris', empty: 'Encore vide', empty_sub: 'Ajoutez des recettes en appuyant sur ❤' },
+  assistant: { title: 'Chef Assistant', subtitle: 'Dites-moi ce que vous avez — je créerai une recette', ingredients_label: 'Ingrédients', restrictions_label: 'Restrictions alimentaires', ingredient_placeholder: 'Ex.: poulet, riz, brocoli...', message_placeholder: 'Demandez quelque chose au chef...', send: 'Envoyer', clear: 'Effacer', add: 'Ajouter', quick_prompts: ['Sans four possible?', 'Suggère quelque chose en 15 min', 'Remplacer un ingrédient', 'Plus de calories svp'], welcome: 'Bonjour! Je suis votre assistant chef 👩‍🍳 Ajoutez vos ingrédients et je créerai une recette.' },
+  recipe: { cook_time: 'Temps', difficulty: 'Difficulté', servings: 'Portions', ingredients: 'Ingrédients', steps: 'Instructions', nutrition: 'Nutrition', calories: 'Calories', protein: 'Protéines', fat: 'Lipides', carbs: 'Glucides', min: 'min', add_favorite: 'Ajouter aux favoris', remove_favorite: 'Retirer des favoris' },
+  difficulty: { easy: 'Facile', medium: 'Moyen', hard: 'Difficile' },
+  restrictions: { vegan: 'Végétalien', vegetarian: 'Végétarien', 'gluten-free': 'Sans gluten', 'lactose-free': 'Sans lactose', 'low-calorie': 'Faible en calories', 'nut-free': 'Sans noix' },
+  auth: { login: 'Connexion', register: 'S\'inscrire', logout: 'Déconnexion', email: 'Email', username: 'Nom d\'utilisateur', password: 'Mot de passe', confirm_password: 'Confirmer le mot de passe', have_account: 'Vous avez un compte?', no_account: 'Pas de compte?', welcome: 'Bienvenue', welcome_back: 'Bon retour', create_account: 'Créer un compte', sign_in: 'Se connecter', email_placeholder: 'votre@email.com', username_placeholder: 'Choisissez un nom', errors: { email_taken: 'Cet email est déjà utilisé', username_taken: 'Ce nom est déjà pris', not_found: 'Utilisateur introuvable', wrong_password: 'Mot de passe incorrect', passwords_mismatch: 'Les mots de passe ne correspondent pas', fill_all: 'Veuillez remplir tous les champs' } },
+  lang: { label: 'Langue', ru: 'Русский', en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch', zh: '中文', ja: '日本語', ko: '한국어', ar: 'العربية', pt: 'Português' },
+  category: { breakfast: 'Petit-déjeuner', soups: 'Soupes', main: 'Plats principaux', salads: 'Salades', desserts: 'Desserts', baking: 'Boulangerie', drinks: 'Boissons', vegan: 'Végan' },
+  not_found: { title: 'Page introuvable', back: 'Retour à l\'accueil' },
+};

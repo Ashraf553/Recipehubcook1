@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/*
+  RecipeHub — "Warm & Cinematic" editorial design language.
+  Single warm light theme: cream paper, terracotta, gold and espresso.
+  Display type set in Fraunces (an opsz serif with real character);
+  body in Inter. Solid warm cards, hairline rules, soft warm shadows.
+*/
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-serif: "Fraunces", "Playfair Display", Georgia, "Times New Roman", serif;
+
+  /* Warm paper surfaces */
+  --color-bg: #f4ead9;
+  --color-bg-secondary: #fbf4e8;
+  --color-surface: #fffcf6;
+  --color-text: #2a1d12;
+  --color-text-secondary: #6f5c47;
+  --color-text-tertiary: #a3927d;
+
+  /* Hairlines + translucent warm glass (floating chrome only) */
+  --color-line: rgb(74 52 32 / 12%);
+  --color-line-strong: rgb(74 52 32 / 20%);
+  --color-glass: rgb(251 244 232 / 72%);
+  --color-glass-strong: rgb(251 244 232 / 86%);
+  --color-glass-edge: rgb(255 255 255 / 55%);
+
+  /* Brand accents */
+  --color-accent: #bf4324;        /* terracotta — default tint */
+  --color-accent-contrast: #fff8ef;
+  --color-gold: #c2902f;          /* warm gold — secondary CTA / detail */
+  --color-cream: #f4ead9;
+
+  /* Category accents — warm, earthy, still distinct */
+  --color-accent-breakfast: #d0892e;
+  --color-accent-soups: #c0492b;
+  --color-accent-main: #a8392a;
+  --color-accent-salads: #6e8b43;
+  --color-accent-desserts: #c25c7a;
+  --color-accent-baking: #b5742f;
+  --color-accent-drinks: #4f8a86;
+  --color-accent-vegan: #5e8c4e;
+
+  --radius-glass: 26px;
+  --radius-glass-sm: 16px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 2px 6px rgb(67 42 22 / 5%), 0 14px 34px rgb(67 42 22 / 9%);
+  --shadow-card-lg: 0 4px 10px rgb(67 42 22 / 7%), 0 28px 60px rgb(67 42 22 / 14%);
+  --shadow-float: 0 14px 36px rgb(67 42 22 / 22%);
+  --shadow-glass: 0 6px 28px rgb(67 42 22 / 10%);
+  --shadow-glass-lg: 0 12px 44px rgb(67 42 22 / 16%);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    margin: 0;
+  }
+
+  /* Faint paper grain + warm vignette behind everything */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgb(255 250 240 / 70%), transparent 60%),
+      radial-gradient(90% 60% at 100% 0%, rgb(194 144 47 / 10%), transparent 55%),
+      radial-gradient(80% 60% at 0% 100%, rgb(191 67 36 / 8%), transparent 55%);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  /* Solid warm card — the primary content surface */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--shadow-card);
+  }
+  .card-lg {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--shadow-card-lg);
+  }
+
+  /* Translucent warm glass — floating chrome (navbar, tab bar, sheets, overlays) */
+  .glass {
+    background: var(--color-glass);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--color-glass-edge);
+    box-shadow: var(--shadow-glass);
+  }
+  .glass-strong {
+    background: var(--color-glass-strong);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid var(--color-glass-edge);
+    box-shadow: var(--shadow-glass-lg);
+  }
+
+  /* Dark translucent glass — for controls sitting on top of imagery */
+  .glass-dark {
+    background: rgb(42 29 18 / 38%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgb(255 255 255 / 18%);
+  }
+
+  .hairline {
+    border-color: var(--color-line);
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  /* GPU-friendly "breathing" hover on imagery */
+  .img-breathe {
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .group:hover .img-breathe { transform: scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .img-breathe { transition: none; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

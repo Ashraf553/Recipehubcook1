@@ -1,0 +1,1 @@
+import{c as e,r as t}from"./jsx-runtime-BgRdeslq.js";import{n}from"./categories-D8jy3LFO.js";var r=e(t(),1);function i(e){return(0,r.useMemo)(()=>{if(!e)return{};let t=n(e);return t?{"--color-accent":t.accent}:{}},[e])}export{i as t};
