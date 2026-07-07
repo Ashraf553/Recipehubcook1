@@ -21,4 +21,13 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    proxy: {
+      // Forward API calls to the Express proxy server during preview.
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
 })

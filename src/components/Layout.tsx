@@ -5,6 +5,7 @@ import { BottomTabBar } from './BottomTabBar';
 import { AssistantFAB } from './AssistantFAB';
 import { AmbientBackground } from './AmbientBackground';
 import { WelcomeBanner } from './WelcomeBanner';
+import { ScrollProgress } from './ScrollProgress';
 import { easeOut } from '../lib/motion';
 
 export function Layout() {
@@ -13,6 +14,7 @@ export function Layout() {
 
   return (
     <div className="min-h-screen">
+      <ScrollProgress />
       <AmbientBackground />
       <Navbar />
       <WelcomeBanner />

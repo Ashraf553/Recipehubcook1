@@ -1,23 +1,24 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-dotenv.config({ quiet: true });
+dotenv.config({ path: './server/.env', quiet: true });
+dotenv.config({ quiet: true }); // fallback to root .env
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
-const apiKey = process.env.ANTHROPIC_API_KEY;
+const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.API_KEY || process.env.ANTHROPIC_API_KEY;
 if (!apiKey) {
   console.warn(
-    '[server] ANTHROPIC_API_KEY не задан — /api/chat будет отвечать ошибкой, пока ты не добавишь ключ в server/.env',
+    '[server] API-ключ Gemini не задан — /api/chat будет отвечать ошибкой, пока ты не добавишь GEMINI_API_KEY в server/.env',
   );
 }
 
-const anthropic = apiKey ? new Anthropic({ apiKey }) : null;
-const MODEL = 'claude-sonnet-4-6';
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
+const MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 
 const SYSTEM_PROMPT =
   'Ты опытный шеф-повар. Помогаешь приготовить блюдо из ингредиентов пользователя. ' +
@@ -25,10 +26,10 @@ const SYSTEM_PROMPT =
   'Учитывай диетические ограничения. Будь дружелюбным и кратким.';
 
 app.post('/api/chat', async (req, res) => {
-  if (!anthropic) {
+  if (!genAI) {
     return res
       .status(500)
-      .json({ error: 'ANTHROPIC_API_KEY не настроен на сервере' });
+      .json({ error: 'API-ключ Gemini не настроен на сервере' });
   }
 
   const { messages, ingredients = [], dietaryRestrictions = [] } = req.body ?? {};
@@ -50,24 +51,27 @@ app.post('/api/chat', async (req, res) => {
     : SYSTEM_PROMPT;
 
   try {
-    const response = await anthropic.messages.create({
+    const generativeModel = genAI.getGenerativeModel({
       model: MODEL,
-      max_tokens: 1024,
-      system,
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+      systemInstruction: system,
     });
 
-    const reply = response.content
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('\n')
-      .trim();
+    const contents = messages.map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }));
+
+    const response = await generativeModel.generateContent({
+      contents,
+    });
+
+    const reply = response.response.text();
 
     res.json({
       reply: reply || 'Не удалось сформировать ответ, попробуй переформулировать запрос.',
     });
   } catch (err) {
-    console.error('[server] Anthropic API error:', err);
+    console.error('[server] Gemini API error:', err);
     res.status(502).json({ error: 'Ошибка при обращении к ИИ. Попробуй позже.' });
   }
 });
