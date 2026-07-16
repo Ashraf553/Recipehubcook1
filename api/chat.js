@@ -1,8 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
-import Anthropic from '@anthropic-ai/sdk';
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
-const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 const SYSTEM_PROMPT =
   'Ты опытный шеф-повар. Помогаешь приготовить блюдо из ингредиентов пользователя. ' +
@@ -27,12 +25,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.API_KEY || process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: 'API-ключ не настроен в настройках проекта' });
   }
-
-  const isAnthropic = apiKey.startsWith('sk-ant-');
 
   const { messages, ingredients = [], dietaryRestrictions = [] } = req.body ?? {};
 
@@ -53,41 +49,26 @@ export default async function handler(req, res) {
     : SYSTEM_PROMPT;
 
   try {
-    let reply = '';
-    if (isAnthropic) {
-      const anthropic = new Anthropic({ apiKey });
-      const response = await anthropic.messages.create({
-        model: ANTHROPIC_MODEL,
-        system: system,
-        messages: messages.map((m) => ({
-          role: m.role === 'assistant' ? 'assistant' : 'user',
-          content: m.content,
-        })),
-        max_tokens: 1024,
-      });
-      reply = response.content[0].text;
-    } else {
-      const ai = new GoogleGenAI({ apiKey });
-      let geminiMessages = messages.map((m) => ({
-        role: m.role === 'assistant' ? 'model' : m.role,
-        parts: [{ text: m.content }],
-      }));
+    const ai = new GoogleGenAI({ apiKey });
+    let geminiMessages = messages.map((m) => ({
+      role: m.role === 'assistant' ? 'model' : m.role,
+      parts: [{ text: m.content }],
+    }));
 
-      if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') {
-        geminiMessages.shift();
-      }
-
-      const response = await ai.models.generateContent({
-        model: GEMINI_MODEL,
-        contents: geminiMessages,
-        config: {
-          systemInstruction: system,
-          maxOutputTokens: 1024,
-        },
-      });
-
-      reply = response.text || 'Не удалось сформировать ответ, попробуй переформулировать запрос.';
+    if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') {
+      geminiMessages.shift();
     }
+
+    const response = await ai.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: geminiMessages,
+      config: {
+        systemInstruction: system,
+        maxOutputTokens: 1024,
+      },
+    });
+
+    const reply = response.text || 'Не удалось сформировать ответ, попробуй переформулировать запрос.';
 
     return res.status(200).json({
       reply: reply.trim(),
