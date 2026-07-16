@@ -23,7 +23,7 @@ if (!apiKey) {
 const ai = (apiKey && !isAnthropic) ? new GoogleGenAI({ apiKey }) : null;
 const anthropic = (apiKey && isAnthropic) ? new Anthropic({ apiKey }) : null;
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022';
 
 const SYSTEM_PROMPT =
